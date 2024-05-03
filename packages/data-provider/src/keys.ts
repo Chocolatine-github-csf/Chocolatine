@@ -29,6 +29,8 @@ export enum QueryKeys {
   getfeedbacks = 'getfeedbacks',
   getfeedbackByPreset = 'getfeedbackByPreset',
   getfeedbackByPresetAndPositivity = 'getfeedbackByPresetAndPositivity',
+  postusercomment = 'postusercomment',
+  getuserscomments = 'getuserscomments',
 }
 
 export enum MutationKeys {

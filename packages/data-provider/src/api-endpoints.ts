@@ -16,6 +16,12 @@ export const getFeedbackByPreset = (preset: string) => `/api/feedback/${preset}`
 
 export const getFeedbackByPresetAndPositivity = (preset: string, feedback: boolean) => `/api/feedback/${preset}/${feedback}`;
 
+export const postusercomments = () => `/api/userComments/`;
+
+export const getuserscomments = () => `/api/userComments/all`;
+
+export const getusercommentsById = (userId: string) => `/api/userComments/${userId}`;
+
 export const tokenUsage = () => '/api/tokenUsage';
 
 export const allSkills = () => '/api/teacherSkills';

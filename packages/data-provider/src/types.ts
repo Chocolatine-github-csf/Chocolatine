@@ -93,6 +93,11 @@ export type TFeedBack = {
   feedback: boolean;
 };
 
+export type TUserComments = {
+  comments : string;
+  date : Date;
+}
+
 export type TGetTokenUsage = {
   email: string;
   tokenCount: number;

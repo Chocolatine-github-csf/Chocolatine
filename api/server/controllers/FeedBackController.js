@@ -4,7 +4,6 @@ const FeedBackController = {
     createFeedBack: async (req, res) => {
         try{
             const { feedback, message, messageId } = req.body;
-            console.log(req.body);
             const feedbackExists = await FeedBack.findOne({ messageId });
             if(feedbackExists){
                 console.log("feedback Exists");

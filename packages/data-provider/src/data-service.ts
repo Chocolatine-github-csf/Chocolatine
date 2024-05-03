@@ -27,6 +27,14 @@ export function postFeedback(feedback: t.TFeedBack): Promise<t.TFeedBack> {
   return request.post(endpoints.postfeedback(), feedback);
 }
 
+export function postUserComments(comment: t.TUserComments): Promise<t.TUserComments> {
+  return request.post(endpoints.postusercomments(), comment);
+}
+
+export function getUsersComments(): Promise<t.TUserComments[]> {
+  return request.get(endpoints.getuserscomments());
+}
+
 export function getFeedbacks(): Promise<t.TFeedBack[]> {
   return request.get(endpoints.getFeedbacks());
 }

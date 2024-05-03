@@ -25,7 +25,7 @@ export default function useFeedback(params?: IFeedback):
     const {data: feedbackListByPreset} = useGetFeedbackByPreset(parameters?.messageId || '');
     const {data: feedbacksList} = useGetFeedbacks();
     const {data: feedbackListByPresetAndPositivity} = useGetFeedbackByPresetAndPositivity(parameters?.messageId || '', parameters?.feedback || false);
-    console.log("Hook: " + parameters.feedback + " " + parameters.messageId + " " + parameters.message);
+    // console.log("Hook: " + parameters.feedback + " " + parameters.messageId + " " + parameters.message);
     const {mutate: postFeedback} = usePostFeedback(parameters);
 
 

@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const { saveFeedBack, getAllFeedBacks, getFeedBackByPreset, getFeedBackByPresetAndPositivity } = require('../controllers/FeedBackController');
 
 const { requireJwtAuth } = require('../middleware/');
 const FeedBackController = require('../controllers/FeedBackController');

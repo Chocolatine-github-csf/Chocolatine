@@ -3,6 +3,7 @@ import { Button, Label, ThemeSelector } from '../ui';
 import { useNavigate } from 'react-router-dom';
 import { TokenUsage , TeacherSkills } from '~/components/Admin/Tools';
 import FeedBackTable from '~/components/Admin/FeedBackTable';
+import CommentsTable from './CommentsTable';
 
 
 const AdminView = () => {
@@ -23,6 +24,7 @@ const AdminView = () => {
       <TokenUsage/>
       <TeacherSkills/>
       <FeedBackTable />
+      <CommentsTable />
       <ThemeSelector />
     </>
   );

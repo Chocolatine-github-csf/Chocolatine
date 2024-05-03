@@ -15,3 +15,4 @@ export default function useUserRole(): string | null {
 
   return role;
 };
+

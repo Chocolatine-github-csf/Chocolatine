@@ -11,6 +11,11 @@ export type TFeedBack = {
   feedback: boolean;
 };
 
+export type TUserComments = {
+  comments : string;
+  date : Date;
+}
+
 export enum EModelEndpoint {
   azureOpenAI = 'azureOpenAI',
   openAI = 'openAI',

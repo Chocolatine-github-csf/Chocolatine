@@ -23,6 +23,7 @@ const role = require('./role');
 const tokenUsage = require('./tokenUsage');
 const teacherSkills = require('./teacherSkills');
 const feedback = require('./feedback');
+const userComments = require('./userComments');
 
 module.exports = {
   search,
@@ -50,4 +51,5 @@ module.exports = {
   tokenUsage,
   feedback,
   teacherSkills,
+  userComments,
 };

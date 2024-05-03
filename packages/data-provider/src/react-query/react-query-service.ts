@@ -45,6 +45,28 @@ export const useGetUserRole = (
   });
 };
 
+export const usePostUserComments = (
+  comment: t.TUserComments,
+  config?: UseMutationOptions<t.TUserComments, unknown, t.TUserComments>,
+): UseMutationResult<t.TUserComments, unknown, t.TUserComments> => {
+  return useMutation<t.TUserComments, unknown, t.TUserComments>(
+    () => dataService.postUserComments(comment) as Promise<t.TUserComments>,
+    config,
+  );
+}
+
+export const useGetUsersComments = (
+  config?: UseQueryOptions<t.TUserComments[]>,
+): QueryObserverResult<t.TUserComments[]> => {
+  return useQuery<t.TUserComments[]>([QueryKeys.getuserscomments], () => dataService.getUsersComments(), {
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    retry: false,
+    ...config,
+  });
+};
+
 export const usePostFeedback = (
   feedback: t.TFeedBack,
   config?: UseMutationOptions<t.TFeedBack, unknown, t.TFeedBack>,
