@@ -96,7 +96,6 @@ const teacherSkillsController = {
     const { subject, skill } = req.params;
     try {
       const skillToUpdate = await TeacherSkills.findOne({ subject, skill });
-      console.log('skillToUpdate', skillToUpdate);
       if (!skillToUpdate) {
         return res.status(200).json({ message: 'No skills found for this subject' });
       }

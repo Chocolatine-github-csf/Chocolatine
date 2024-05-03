@@ -17,8 +17,8 @@ export default function Header() {
           <>
             <EndpointsMenu />
             <HeaderOptions />
-            <PresetsMenu />
-            <SubjectMenu />
+            {/* <PresetsMenu />
+            <SubjectMenu /> */}
             <AdminMenu />
           </>
         )}

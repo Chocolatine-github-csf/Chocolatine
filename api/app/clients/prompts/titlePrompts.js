@@ -73,7 +73,7 @@ function parseTitleFromPrompt(prompt) {
 
     // // Capitalize the first letter of each word; Note: unnecessary due to title case prompting
     // const capitalizedTitle = title.replace(/\b\w/g, (char) => char.toUpperCase());
-
+    console.log(`Title parsed from prompt: ${title}`);
     return title;
   }
 

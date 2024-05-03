@@ -10,27 +10,34 @@ function TeacherSkills() {
 
   const {
     teacherSkillsListAll,
-    teacherSkillsListBySubject,
     createSkill,
     incrementSkill,
     resetSkill,
     deleteSkill } = useTeacherSkills({ subject, skillName, count });
 
-  const handleCreateSkill = () => {
-    console.log('Creating skill with subject:', subject, 'and skillName:', skillName);
-    createSkill({ subject, skill: skillName });
+  const handleCreateSkill = async () => {
+    await createSkill({ subject, skill: skillName });
+    resetInput();
   };
 
-  const handleIncrementSkill = () => {
-    incrementSkill({ subject, skill: skillName });
+  const handleIncrementSkill = async () => {
+    await incrementSkill({ subject, skill: skillName });
+    resetInput();
   };
 
-  const handleDeleteSkill = () => {
-    deleteSkill({ subject, skill: skillName });
+  const handleDeleteSkill = async () => {
+    await deleteSkill({ subject, skill: skillName });
+    resetInput();
   };
 
-  const handleResetSkill = () => {
-    resetSkill({ subject, skill: skillName });
+  const handleResetSkill = async () => {
+    await resetSkill({ subject, skill: skillName });
+    resetInput();
+  };
+
+  const resetInput = () => {
+    setSubject('');
+    setSkillName('');
   };
 
   return (
@@ -60,7 +67,7 @@ function TeacherSkills() {
         <Input className='w-full' value={skillName} onChange={e => setSkillName(e.target.value)} placeholder="competence" />
       </div>
       <div className='flex space-x-2 mb-5'>
-        <Button className='mb-2' onClick={handleIncrementSkill}>Incrémenter une compétence</Button>
+        <Button onClick={handleIncrementSkill}>Incrémenter une compétence</Button>
         <Button onClick={handleCreateSkill}>Créer une compétence</Button>
         <Button onClick={handleDeleteSkill}>Supprimer une compétence</Button>
         <Button onClick={handleResetSkill}>Réinitialiser une compétence</Button>

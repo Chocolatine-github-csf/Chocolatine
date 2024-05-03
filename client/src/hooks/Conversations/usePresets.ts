@@ -40,12 +40,12 @@ export default function usePresets() {
   const { newConversation } = useNewConvo(index);
 
   //FOR TEACHER
-  const isTeacher = useTeacherData().isTeacher;
-  const presetTeacherContext = useContext(PresetTeacherContext);
-  if (!presetTeacherContext) {
-    throw new Error('usePresets must be used within a PresetTeacherContext.Provider');
-  }
-  const { setSelectedPreset } = presetTeacherContext;
+  // const isTeacher = useTeacherData().isTeacher;
+  // const presetTeacherContext = useContext(PresetTeacherContext);
+  // if (!presetTeacherContext) {
+  //   throw new Error('usePresets must be used within a PresetTeacherContext.Provider');
+  // }
+  // const { setSelectedPreset } = presetTeacherContext;
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   useEffect(() => {
@@ -70,9 +70,9 @@ export default function usePresets() {
     }
     setDefaultPreset(defaultPreset);
     //FOR TEACHER
-    if(isTeacher){
-      setSelectedPreset(defaultPreset);
-    }
+    // if(isTeacher){
+    //   setSelectedPreset(defaultPreset);
+    // }
     if (!conversation?.conversationId || conversation.conversationId === 'new') {
       newConversation({ preset: defaultPreset, modelsData });
     }
