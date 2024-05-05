@@ -101,6 +101,8 @@
     ]
   },
   "dependencies": {
-    "librechat-data-provider": "^0.5.5"
+    "chart.js": "^4.4.2",
+    "librechat-data-provider": "^0.5.5",
+    "react-chartjs-2": "^5.2.0"
   }
 }
