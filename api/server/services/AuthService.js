@@ -1,8 +1,8 @@
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
-const { errorsToString } = require('librechat-data-provider');
-const { registerSchema } = require('~/strategies/validators');
-const getCustomConfig = require('~/server/services/Config/getCustomConfig');
+const { registerSchema, errorsToString } = require('~/strategies/validators');
+const isDomainAllowed = require('./isDomainAllowed');
+const isUserNameAllowed = require('./isUserNameAllowed');
 const Token = require('~/models/schema/tokenSchema');
 const { sendEmail } = require('~/server/utils');
 const Session = require('~/models/Session');
@@ -13,48 +13,6 @@ const domains = {
   client: process.env.DOMAIN_CLIENT,
   server: process.env.DOMAIN_SERVER,
 };
-
-async function isDomainAllowed(email) {
-  if (!email) {
-    return false;
-  }
-
-  const domain = email.split('@')[1];
-
-  if (!domain) {
-    return false;
-  }
-
-  const customConfig = await getCustomConfig();
-  if (!customConfig) {
-    return true;
-  } else if (!customConfig?.registration?.allowedDomains) {
-    return true;
-  }
-
-  return customConfig.registration.allowedDomains.includes(domain);
-}
-
-async function isAdmissionNumberAllowed(email) {
-  if (!email) {
-    return false;
-  }
-
-  const admissionNumber = email.split('@')[0];
-
-  if (!admissionNumber) {
-    return false;
-  }
-
-  const customConfig = await getCustomConfig();
-  if (!customConfig) {
-    return true;
-  } else if (!customConfig?.registration?.allowedAdmissionNumbers) {
-    return true;
-  }
-
-  return customConfig.registration.allowedAdmissionNumbers.includes(admissionNumber);
-}
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -130,8 +88,8 @@ const registerUser = async (user) => {
       return { status: 403, message: errorMessage };
     }
 
-    if (!(await isAdmissionNumberAllowed(email))) {
-      const errorMessage = 'Registration from this admission number is not allowed.';
+    if (!(await isUserNameAllowed(email))) {
+      const errorMessage = 'Registration from this user name is not allowed.';
       logger.error(`[registerUser] [Registration not allowed] [Email: ${user.email}]`);
       return { status: 403, message: errorMessage };
     }

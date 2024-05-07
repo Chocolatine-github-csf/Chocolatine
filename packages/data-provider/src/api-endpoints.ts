@@ -1,3 +1,5 @@
+import { TFeedBack } from "./schemas";
+
 export const user = () => '/api/user';
 
 export const balance = () => '/api/balance';
@@ -6,7 +8,37 @@ export const userPlugins = () => '/api/user/plugins';
 
 export const userRole = () => '/api/role';
 
+export const postfeedback = () => `/api/feedback/`;
+
+export const getFeedbacks = () => `/api/feedback/all`;
+
+export const getFeedbackByPreset = (preset: string) => `/api/feedback/${preset}`;
+
+export const getFeedbackByPresetAndPositivity = (preset: string, feedback: boolean) => `/api/feedback/${preset}/${feedback}`;
+
+export const postusercomments = () => `/api/userComments/`;
+
+export const getuserscomments = () => `/api/userComments/all`;
+
+export const getusercommentsById = (userId: string) => `/api/userComments/${userId}`;
+
 export const tokenUsage = () => '/api/tokenUsage';
+
+export const allSkills = () => '/api/teacherSkills';
+
+export const skillsBySubject = (subject: string) => `/api/teacherSkills/subject/${subject}`;
+
+export const skillsBySkill = (skill: string) => `/api/teacherSkills/skill/${skill}`;
+
+export const skillsBySubjectAndSkill = (subject: string, skill: string) => `/api/teacherSkills/${subject}/${skill}`;
+
+export const createSkill = () => '/api/teacherSkills/createSkill';
+
+export const incrementSkill = (subject: string, skill: string) => `/api/teacherSkills/incrementSkill/${subject}/${skill}`;
+
+export const resetSkill = (subject: string, skill: string) => `/api/teacherSkills/resetSkill/${subject}/${skill}`;
+
+export const deleteSkill = (subject: string, skill: string) => `/api/teacherSkills/deleteSkill/${subject}/${skill}`;
 
 export const messages = (conversationId: string, messageId?: string) =>
   `/api/messages/${conversationId}${messageId ? `/${messageId}` : ''}`;

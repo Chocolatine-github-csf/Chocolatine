@@ -1,18 +1,20 @@
 import {
   UseQueryOptions,
   useQuery,
+  UseMutationOptions,
   useMutation,
   useQueryClient,
   UseMutationResult,
   QueryObserverResult,
+  QueryClient,
 } from '@tanstack/react-query';
-import * as t from '../types';
-import * as s from '../schemas';
-import * as m from '../types/mutations';
-import { defaultOrderQuery } from '../config';
+import { defaultOrderQuery, initialModelsConfig } from '../config';
 import * as dataService from '../data-service';
-import request from '../request';
+import * as m from '../types/mutations';
 import { QueryKeys } from '../keys';
+import request from '../request';
+import * as s from '../schemas';
+import * as t from '../types';
 
 export const useAbortRequestWithMessage = (): UseMutationResult<
   void,
@@ -43,6 +45,80 @@ export const useGetUserRole = (
   });
 };
 
+export const usePostUserComments = (
+  comment: t.TUserComments,
+  config?: UseMutationOptions<t.TUserComments, unknown, t.TUserComments>,
+): UseMutationResult<t.TUserComments, unknown, t.TUserComments> => {
+  return useMutation<t.TUserComments, unknown, t.TUserComments>(
+    () => dataService.postUserComments(comment) as Promise<t.TUserComments>,
+    config,
+  );
+}
+
+export const useGetUsersComments = (
+  config?: UseQueryOptions<t.TUserComments[]>,
+): QueryObserverResult<t.TUserComments[]> => {
+  return useQuery<t.TUserComments[]>([QueryKeys.getuserscomments], () => dataService.getUsersComments(), {
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    retry: false,
+    ...config,
+  });
+};
+
+export const usePostFeedback = (
+  feedback: t.TFeedBack,
+  config?: UseMutationOptions<t.TFeedBack, unknown, t.TFeedBack>,
+): UseMutationResult<t.TFeedBack, unknown, t.TFeedBack> => {
+  return useMutation<t.TFeedBack, unknown, t.TFeedBack>(
+    () => dataService.postFeedback(feedback) as Promise<t.TFeedBack>,
+    config,
+  );
+}
+
+export const useGetFeedbacks= (
+  config?: UseQueryOptions<t.TFeedBack[]>
+): QueryObserverResult<t.TFeedBack[]> => {
+  return useQuery<t.TFeedBack[]>([QueryKeys.getfeedbacks], () => dataService.getFeedbacks(), {
+
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    retry: false,
+    ...config,
+  });
+};
+
+export const useGetFeedbackByPreset = (
+  preset: string,
+  config?: UseQueryOptions<t.TFeedBack[]>
+): QueryObserverResult<t.TFeedBack[]> => {
+  return useQuery<t.TFeedBack[]>([QueryKeys.getfeedbackByPreset, preset], () => dataService.getFeedbackByPreset(preset), {
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    retry: false,
+    ...config,
+  });
+};
+
+export const useGetFeedbackByPresetAndPositivity = (
+  preset: string,
+  feedback: boolean,
+  config?: UseQueryOptions<t.TFeedBack[]>
+): QueryObserverResult<t.TFeedBack[]> => {
+  return useQuery<t.TFeedBack[]>([QueryKeys.getfeedbackByPresetAndPositivity, preset, feedback], () => dataService.getFeedbackByPresetAndPositivity(preset, feedback), {
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    retry: false,
+    ...config,
+  });
+};
+
+
+
 export const useGetTokenUsage = (
   config?: UseQueryOptions<t.TGetTokenUsage[]>,
 ): QueryObserverResult<t.TGetTokenUsage[]> => {
@@ -52,6 +128,120 @@ export const useGetTokenUsage = (
     refetchOnMount: true,
     ...config,
   });
+};
+
+export const useGetAllSkills = (
+  config?: UseQueryOptions<t.TSkill[]>,
+): QueryObserverResult<t.TSkill[]> => {
+  return useQuery<t.TSkill[]>([QueryKeys.teacherSkills], () => dataService.getAllSkills(), {
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    ...config,
+  });
+};
+
+export const useGetSkillsBySubject = (
+  subject: string,
+  config?: UseQueryOptions<t.TSkill[]>,
+): QueryObserverResult<t.TSkill[]> => {
+  return useQuery<t.TSkill[]>([QueryKeys.teacherSkills, subject], () => dataService.getSkillsBySubject(subject), {
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    ...config,
+  });
+};
+
+export const useGetSkillsBySkill = (
+  skill: string,
+  config?: UseQueryOptions<t.TSkill[]>,
+): QueryObserverResult<t.TSkill[]> => {
+  return useQuery<t.TSkill[]>([QueryKeys.teacherSkills, skill], () => dataService.getSkillsBySkill(skill), {
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    ...config,
+  });
+};
+
+export const useGetSkillsBySubjectAndSkill = (
+  subject: string,
+  skill: string,
+  config?: UseQueryOptions<t.TSkill[]>,
+): QueryObserverResult<t.TSkill[]> => {
+  return useQuery<t.TSkill[]>([QueryKeys.teacherSkills, subject, skill],
+    () => dataService.getSkillsBySubjectAndSkill(subject, skill),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+      ...config,
+    },
+  );
+};
+
+export const useCreateSkill = (
+  newSkill: t.TSkill,
+  queryClient: QueryClient,
+  config?: UseMutationOptions<t.TSkill, unknown, t.TSkill>,
+): UseMutationResult<t.TSkill, unknown, t.TSkill> => {
+  return useMutation<t.TSkill, unknown, t.TSkill>(
+    () => dataService.createSkill(newSkill) as Promise<t.TSkill>,
+    {
+      ...config,
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKeys.teacherSkills]);
+      },
+    },
+  );
+};
+
+export const useIncrementSkill = (
+  skill: t.TSkill,
+  queryClient: QueryClient,
+  config?: UseMutationOptions<t.TSkill, unknown, t.TSkill>,
+): UseMutationResult<t.TSkill, unknown, t.TSkill> => {
+  return useMutation<t.TSkill, unknown, t.TSkill>(
+    () => dataService.incrementSkill(skill) as Promise<t.TSkill>,
+    {
+      ...config,
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKeys.teacherSkills]);
+      },
+    },
+  );
+};
+
+export const useResetSkill = (
+  skill: t.TSkill,
+  queryClient: QueryClient,
+  config?: UseMutationOptions<t.TSkill, unknown, t.TSkill>,
+): UseMutationResult<t.TSkill, unknown, t.TSkill> => {
+  return useMutation<t.TSkill, unknown, t.TSkill>(
+    () => dataService.resetSkill(skill) as Promise<t.TSkill>,
+    {
+      ...config,
+      onSuccess: () => { queryClient.invalidateQueries([QueryKeys.teacherSkills]);
+      },
+    },
+  );
+};
+
+export const useDeleteSkill = (
+  skill: t.TSkill,
+  queryClient: QueryClient,
+  config?: UseMutationOptions<t.TSkill, unknown, t.TSkill>,
+): UseMutationResult<t.TSkill, unknown, t.TSkill> => {
+  return useMutation<t.TSkill, unknown, t.TSkill>(
+    () => dataService.deleteSkill(skill) as Promise<t.TSkill>,
+    {
+      ...config,
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKeys.teacherSkills]);
+      },
+    },
+  );
 };
 
 export const useGetUserQuery = (
@@ -234,10 +424,11 @@ export const useGetModelsQuery = (
   config?: UseQueryOptions<t.TModelsConfig>,
 ): QueryObserverResult<t.TModelsConfig> => {
   return useQuery<t.TModelsConfig>([QueryKeys.models], () => dataService.getModels(), {
-    staleTime: Infinity,
+    initialData: initialModelsConfig,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     refetchOnMount: false,
+    staleTime: Infinity,
     ...config,
   });
 };

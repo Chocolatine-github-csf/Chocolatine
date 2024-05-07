@@ -5,7 +5,6 @@ import HeaderOptions from './Input/HeaderOptions';
 import { useTeacherData } from '~/hooks/useTeacherData';
 import { useUserRole } from '~/hooks';
 
-
 export default function Header() {
   const { navVisible } = useOutletContext<ContextType>();
   const isTeacher = useTeacherData().isTeacher;
@@ -13,19 +12,13 @@ export default function Header() {
   return (
     <div className="sticky top-0 z-10 flex h-14 w-full items-center justify-between bg-white p-2 font-semibold dark:bg-gray-800 dark:text-white">
       <div className="hide-scrollbar flex items-center gap-2 overflow-x-auto">
-      {!navVisible && <HeaderNewChat />}
-        {isTeacher && role !== 'ADMIN' ? (
-          <>
-            <AdminMenu />
-            <PresetsTeacherMenu />
-            <SubjectMenu />
-          </>
-        ) : (
+        {!navVisible && <HeaderNewChat />}
+        {isTeacher && role === 'ADMIN' && (
           <>
             <EndpointsMenu />
             <HeaderOptions />
-            <PresetsMenu />
-            <SubjectMenu />
+            {/* <PresetsMenu />
+            <SubjectMenu /> */}
             <AdminMenu />
           </>
         )}

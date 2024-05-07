@@ -23,8 +23,67 @@ export function getRole(): Promise<t.TRole> {
   return request.get(endpoints.userRole());
 }
 
+export function postFeedback(feedback: t.TFeedBack): Promise<t.TFeedBack> {
+  return request.post(endpoints.postfeedback(), feedback);
+}
+
+export function postUserComments(comment: t.TUserComments): Promise<t.TUserComments> {
+  return request.post(endpoints.postusercomments(), comment);
+}
+
+export function getUsersComments(): Promise<t.TUserComments[]> {
+  return request.get(endpoints.getuserscomments());
+}
+
+export function getFeedbacks(): Promise<t.TFeedBack[]> {
+  return request.get(endpoints.getFeedbacks());
+}
+
+export function getFeedbackByPreset(preset: string): Promise<t.TFeedBack[]> {
+  return request.get(endpoints.getFeedbackByPreset(preset));
+}
+
+export function getFeedbackByPresetAndPositivity(
+  preset: string,
+  feedback: boolean,
+): Promise<t.TFeedBack[]> {
+  return request.get(endpoints.getFeedbackByPresetAndPositivity(preset, feedback));
+}
+
 export function getTokenUsage(): Promise<t.TGetTokenUsage[]> {
   return request.get(endpoints.tokenUsage());
+}
+
+export function getAllSkills(): Promise<t.TSkill[]> {
+  return request.get(endpoints.allSkills());
+}
+
+export function getSkillsBySubject(subject: string): Promise<t.TSkill[]> {
+  return request.get(endpoints.skillsBySubject(subject));
+}
+
+export function getSkillsBySkill(skill: string): Promise<t.TSkill[]> {
+  return request.get(endpoints.skillsBySkill(skill));
+}
+
+export function getSkillsBySubjectAndSkill(subject: string, skill: string): Promise<t.TSkill[]> {
+  return request.get(endpoints.skillsBySubjectAndSkill(subject, skill));
+}
+
+export function createSkill(newSkill: { subject: string, skill: string }): Promise<unknown> {
+  return request.post(endpoints.createSkill(), newSkill);
+}
+
+export function incrementSkill(skill: t.TSkill): Promise<unknown> {
+  return request.put(endpoints.incrementSkill(skill.subject, skill.skill));
+}
+
+export function resetSkill(skill: t.TSkill): Promise<unknown> {
+  return request.put(endpoints.resetSkill(skill.subject, skill.skill));
+}
+
+export function deleteSkill(skill: t.TSkill): Promise<unknown> {
+  return request.delete(endpoints.deleteSkill(skill.subject, skill.skill));
 }
 
 export function deleteConversation(payload: t.TDeleteConversationRequest) {
@@ -239,6 +298,25 @@ export const uploadAssistantAvatar = (data: m.AssistantAvatarVariables): Promise
   );
 };
 
+// export const getFileDownload = async (userId: string, file_id: string): Promise<AxiosResponse> => {
+//   return request.getResponse(`${endpoints.files()}/download/${userId}/${file_id}`, {
+//     responseType: 'blob',
+//     headers: {
+//       Accept: 'application/octet-stream',
+//     },
+//   });
+// };
+
+export const deleteFiles = async (
+  files: f.BatchFile[],
+  assistant_id?: string,
+): Promise<f.DeleteFilesResponse> =>
+  request.deleteWithOptions(endpoints.files(), {
+    data: { files, assistant_id },
+  });
+
+/* actions */
+
 export const updateAction = (data: m.UpdateActionVariables): Promise<m.UpdateActionResponse> => {
   const { assistant_id, ...body } = data;
   return request.post(endpoints.assistants(`actions/${assistant_id}`), body);
@@ -251,14 +329,6 @@ export function getActions(): Promise<a.Action[]> {
 export function getAssistantDocs(): Promise<a.AssistantDocument[]> {
   return request.get(endpoints.assistants('documents'));
 }
-
-export const deleteFiles = async (
-  files: f.BatchFile[],
-  assistant_id?: string,
-): Promise<f.DeleteFilesResponse> =>
-  request.deleteWithOptions(endpoints.files(), {
-    data: { files, assistant_id },
-  });
 
 /* conversations */
 

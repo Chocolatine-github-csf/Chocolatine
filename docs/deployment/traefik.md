@@ -28,40 +28,39 @@ weight: 10
    ```yaml
     version: '3'
 
-    services:
-    api:
-        labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.librechat.rule=Host(`your.domain.name`)"
-        - "traefik.http.routers.librechat.entrypoints=websecure"
-        - "traefik.http.routers.librechat.tls.certresolver=leresolver"
-        - "traefik.http.services.librechat.loadbalancer.server.port=3080"
-        networks:
-        - web
-        - librechat_default
-        volumes:
-        - ./librechat.yaml:/app/librechat.yaml
-
-traefik:
-        image: traefik:v2.9
-        ports:
-        - "80:80"
-        - "443:443"
-        volumes:
-        - "/var/run/docker.sock:/var/run/docker.sock:ro"
-        - "./letsencrypt:/letsencrypt"
-        networks:
-        - web
-        command:
-        - "--log.level=DEBUG"
-        - "--api.insecure=true"
-        - "--providers.docker=true"
-        - "--providers.docker.exposedbydefault=false"
-        - "--entrypoints.web.address=:80"
-        - "--entrypoints.websecure.address=:443"
-        - "--certificatesresolvers.leresolver.acme.tlschallenge=true"
-        - "--certificatesresolvers.leresolver.acme.email=your@email.com"
-        - "--certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json"
+services:
+   api:
+     labels:
+       - "traefik.enable=true"
+       - "traefik.http.routers.librechat.rule=Host(`your.domain.name`)"
+       - "traefik.http.routers.librechat.entrypoints=websecure"
+       - "traefik.http.routers.librechat.tls.certresolver=leresolver"
+       - "traefik.http.services.librechat.loadbalancer.server.port=3080"
+     networks:
+       - librechat_default
+     volumes:
+       - ./librechat.yaml:/app/librechat.yaml
+  
+   traefik:
+     image: traefik:v2.9
+     ports:
+      - "80:80"
+      - "443:443"
+     volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+     networks:
+      - librechat_default
+     command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.leresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.leresolver.acme.email=your@email.com"
+      - "--certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json"
 
     networks:
     web:

@@ -324,3 +324,36 @@ export const useGetAssistantDocsQuery = (
     },
   );
 };
+
+export const useFileDownload = (userId?: string, file_id?: string): QueryObserverResult<string> => {
+  const queryClient = useQueryClient();
+  return useQuery(
+    [QueryKeys.fileDownload, file_id],
+    async () => {
+      if (!userId || !file_id) {
+        console.warn('No user ID provided for file download');
+        return;
+      }
+      const response = await dataService.getFileDownload(userId, file_id);
+      const blob = response.data;
+      const downloadURL = window.URL.createObjectURL(blob);
+      try {
+        const metadata: TFile | undefined = JSON.parse(response.headers['x-file-metadata']);
+        if (!metadata) {
+          console.warn('No metadata found for file download', response.headers);
+          return downloadURL;
+        }
+
+        addFileToCache(queryClient, metadata);
+      } catch (e) {
+        console.error('Error parsing file metadata, skipped updating file query cache', e);
+      }
+
+      return downloadURL;
+    },
+    {
+      enabled: false,
+      retry: false,
+    },
+  );
+};

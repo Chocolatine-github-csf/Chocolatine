@@ -87,10 +87,27 @@ export type TRole = {
   role: string;
 };
 
+export type TFeedBack = {
+  messageId: string;
+  message: string;
+  feedback: boolean;
+};
+
+export type TUserComments = {
+  comments : string;
+  date : Date;
+}
+
 export type TGetTokenUsage = {
   email: string;
   tokenCount: number;
 };
+
+export type TSkill = {
+  subject: string;
+  skill: string;
+  count: number;
+}
 
 export type TGetConversationsResponse = {
   conversations: TConversation[];

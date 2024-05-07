@@ -22,6 +22,7 @@ const Key = require('./Key');
 const User = require('./User');
 const Session = require('./Session');
 const Balance = require('./Balance');
+const FeedBack = require('./FeedBack');
 
 module.exports = {
   User,
@@ -57,4 +58,7 @@ module.exports = {
   deleteFiles,
   getFiles,
   updateFileUsage,
+
+  FeedBack,
+
 };

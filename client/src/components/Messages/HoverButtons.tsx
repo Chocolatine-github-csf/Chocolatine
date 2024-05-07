@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import type { TConversation, TMessage } from 'librechat-data-provider';
-import { Clipboard, CheckMark, EditIcon, RegenerateIcon, ContinueIcon } from '~/components/svg';
+import { Clipboard, CheckMark, EditIcon, RegenerateIcon, ContinueIcon, FeedBackGood } from '~/components/svg';
 import { useGenerations, useLocalize } from '~/hooks';
 import { cn } from '~/utils';
+import LikeIcon from '../svg/LikeIcon';
+import { useTeacherData } from '~/hooks/useTeacherData';
 
 type THoverButtons = {
   isEditing: boolean;
@@ -38,6 +40,8 @@ export default function HoverButtons({
     return null;
   }
 
+  const isTeacher = useTeacherData();
+
   const { isCreatedByUser } = message;
 
   const onEdit = () => {
@@ -49,6 +53,7 @@ export default function HoverButtons({
 
   return (
     <div className="visible mt-2 flex justify-center gap-3 self-end text-gray-400 md:gap-4 lg:absolute lg:right-0 lg:top-0 lg:mt-0 lg:translate-x-full lg:gap-1 lg:self-center lg:pl-2">
+      
       <button
         className={cn(
           'hover-button rounded-md p-1 hover:bg-gray-200 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible',
@@ -96,6 +101,8 @@ export default function HoverButtons({
           <ContinueIcon className="h-4 w-4 hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400" />
         </button>
       ) : null}
+      
     </div>
+    
   );
 }

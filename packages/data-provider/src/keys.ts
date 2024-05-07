@@ -24,6 +24,13 @@ export enum QueryKeys {
   assistantDocs = 'assistantDocs',
   userRole = 'userRole',
   tokenUsage = 'tokenUsage',
+  teacherSkills = 'teacherSkills',
+  postfeedback = 'postfeedback',
+  getfeedbacks = 'getfeedbacks',
+  getfeedbackByPreset = 'getfeedbackByPreset',
+  getfeedbackByPresetAndPositivity = 'getfeedbackByPresetAndPositivity',
+  postusercomment = 'postusercomment',
+  getuserscomments = 'getuserscomments',
 }
 
 export enum MutationKeys {

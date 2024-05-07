@@ -10,7 +10,7 @@ const {
   EModelEndpoint,
   mergeFileConfig,
 } = require('librechat-data-provider');
-const { convertToWebP, resizeAndConvert } = require('~/server/services/Files/images');
+const { convertImage, resizeAndConvert } = require('~/server/services/Files/images');
 const { initializeClient } = require('~/server/services/Endpoints/assistants');
 const { createFile, updateFileUsage, deleteFiles } = require('~/models/File');
 const { isEnabled, determineFileType } = require('~/server/utils');
@@ -207,7 +207,7 @@ const processImageFile = async ({ req, res, file, metadata }) => {
       filename: file.originalname,
       context: FileContext.message_attachment,
       source,
-      type: 'image/webp',
+      type: `image/${req.app.locals.imageOutputType}`,
       width,
       height,
     },
@@ -223,14 +223,25 @@ const processImageFile = async ({ req, res, file, metadata }) => {
  * @param {Object} params - The parameters object.
  * @param {Express.Request} params.req - The Express request object.
  * @param {FileContext} params.context - The context of the file (e.g., 'avatar', 'image_generation', etc.)
- * @returns {Promise<{ filepath: string, filename: string, source: string, type: 'image/webp'}>}
+ * @param {boolean} [params.resize=true] - Whether to resize and convert the image to target format. Default is `true`.
+ * @param {{ buffer: Buffer, width: number, height: number, bytes: number, filename: string, type: string, file_id: string }} [params.metadata] - Required metadata for the file if resize is false.
+ * @returns {Promise<{ filepath: string, filename: string, source: string, type: string}>}
  */
 const uploadImageBuffer = async ({ req, context }) => {
   const source = req.app.locals.fileStrategy;
   const { saveBuffer } = getStrategyFunctions(source);
-  const { buffer, width, height, bytes } = await resizeAndConvert(req.file.buffer);
-  const file_id = v4();
-  const fileName = `img-${file_id}.webp`;
+  let { buffer, width, height, bytes, filename, file_id, type } = metadata;
+  if (resize) {
+    file_id = v4();
+    type = `image/${req.app.locals.imageOutputType}`;
+    ({ buffer, width, height, bytes } = await resizeAndConvert({
+      inputBuffer: buffer,
+      desiredFormat: req.app.locals.imageOutputType,
+    }));
+    filename = `${path.basename(req.file.originalname, path.extname(req.file.originalname))}.${
+      req.app.locals.imageOutputType
+    }`;
+  }
 
   const filepath = await saveBuffer({ userId: req.user.id, fileName, buffer });
   return await createFile(
@@ -303,6 +314,96 @@ const processFileUpload = async ({ req, res, file, metadata }) => {
     true,
   );
   res.status(200).json({ message: 'File uploaded and processed successfully', ...result });
+};
+
+/**
+ * @param {object} params - The params object.
+ * @param {OpenAI} params.openai - The OpenAI client instance.
+ * @param {string} params.file_id - The ID of the file to retrieve.
+ * @param {string} params.userId - The user ID.
+ * @param {string} [params.filename] - The name of the file. `undefined` for `file_citation` annotations.
+ * @param {boolean} [params.saveFile=false] - Whether to save the file metadata to the database.
+ * @param {boolean} [params.updateUsage=false] - Whether to update file usage in database.
+ */
+const processOpenAIFile = async ({
+  openai,
+  file_id,
+  userId,
+  filename,
+  saveFile = false,
+  updateUsage = false,
+}) => {
+  const _file = await openai.files.retrieve(file_id);
+  const originalName = filename ?? (_file.filename ? path.basename(_file.filename) : undefined);
+  const filepath = `${openai.baseURL}/files/${userId}/${file_id}${
+    originalName ? `/${originalName}` : ''
+  }`;
+  const type = mime.getType(originalName ?? file_id);
+
+  const file = {
+    ..._file,
+    type,
+    file_id,
+    filepath,
+    usage: 1,
+    user: userId,
+    context: _file.purpose,
+    source: FileSources.openai,
+    model: openai.req.body.model,
+    filename: originalName ?? file_id,
+  };
+
+  if (saveFile) {
+    await createFile(file, true);
+  } else if (updateUsage) {
+    try {
+      await updateFileUsage({ file_id });
+    } catch (error) {
+      logger.error('Error updating file usage', error);
+    }
+  }
+
+  return file;
+};
+
+/**
+ * Process OpenAI image files, convert to target format, save and return file metadata.
+ * @param {object} params - The params object.
+ * @param {Express.Request} params.req - The Express request object.
+ * @param {Buffer} params.buffer - The image buffer.
+ * @param {string} params.file_id - The file ID.
+ * @param {string} params.filename - The filename.
+ * @param {string} params.fileExt - The file extension.
+ * @returns {Promise<MongoFile>} The file metadata.
+ */
+const processOpenAIImageOutput = async ({ req, buffer, file_id, filename, fileExt }) => {
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString();
+  const _file = await convertImage(req, buffer, 'high', `${file_id}${fileExt}`);
+  const file = {
+    ..._file,
+    usage: 1,
+    user: req.user.id,
+    type: `image/${req.app.locals.imageOutputType}`,
+    createdAt: formattedDate,
+    updatedAt: formattedDate,
+    source: req.app.locals.fileStrategy,
+    context: FileContext.assistants_output,
+    file_id: `${file_id}${hostImageIdSuffix}`,
+    filename: `${hostImageNamePrefix}${filename}`,
+  };
+  createFile(file, true);
+  createFile(
+    {
+      ...file,
+      file_id,
+      filename,
+      source: FileSources.openai,
+      type: mime.getType(fileExt),
+    },
+    true,
+  );
+  return file;
 };
 
 /**

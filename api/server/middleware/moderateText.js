@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { ErrorTypes } = require('librechat-data-provider');
 const denyRequest = require('./denyRequest');
 
 async function moderateText(req, res, next) {
@@ -23,7 +24,7 @@ async function moderateText(req, res, next) {
       const flagged = results.some((result) => result.flagged);
 
       if (flagged) {
-        const type = 'moderation';
+        const type = ErrorTypes.MODERATION;
         const errorMessage = { type };
         return await denyRequest(req, res, errorMessage);
       }

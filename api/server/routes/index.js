@@ -17,9 +17,13 @@ const user = require('./user');
 const config = require('./config');
 const assistants = require('./assistants');
 const files = require('./files');
+const staticRoute = require('./static');
 const isTeacher = require('./isTeacher');
 const role = require('./role');
 const tokenUsage = require('./tokenUsage');
+const teacherSkills = require('./teacherSkills');
+const feedback = require('./feedback');
+const userComments = require('./userComments');
 
 module.exports = {
   search,
@@ -41,7 +45,11 @@ module.exports = {
   config,
   assistants,
   files,
+  staticRoute,
   isTeacher,
   role,
   tokenUsage,
+  feedback,
+  teacherSkills,
+  userComments,
 };

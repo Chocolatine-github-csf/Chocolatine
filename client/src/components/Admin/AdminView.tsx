@@ -1,9 +1,10 @@
 import { memo } from 'react';
 import { Button, Label, ThemeSelector } from '../ui';
 import { useNavigate } from 'react-router-dom';
-import { TokenUsage } from '~/components/Admin/Tools';
-import {cn} from "~/utils";
-import colors from "tailwindcss/colors";
+import { TokenUsage , TeacherSkills } from '~/components/Admin/Tools';
+import FeedBackTable from '~/components/Admin/FeedBackTable';
+import CommentsTable from './CommentsTable';
+
 
 const AdminView = () => {
   const navigate = useNavigate();
@@ -11,19 +12,21 @@ const AdminView = () => {
     navigate('/c/new');
   };
 
+
   return (
-    <div className='flex items-center justify-center min-h-screen'>
-      <div className='container'>
-        <h1 className='text-white px-4 py-2 rounded'>Admin View</h1>
-        <div>
-          <Button className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded" onClick={returnToChat}>
-            <span>Retourne au Chat</span>
-          </Button>
-        </div>
-        <TokenUsage/>
-        <ThemeSelector />
+    <>
+      <h1><Label>Admin View</Label></h1>
+      <div>
+        <Button  onClick={returnToChat}>
+          Retourne au Chat
+        </Button>
       </div>
-    </div>
+      <TokenUsage/>
+      <TeacherSkills/>
+      <FeedBackTable />
+      <CommentsTable />
+      <ThemeSelector />
+    </>
   );
 };
 

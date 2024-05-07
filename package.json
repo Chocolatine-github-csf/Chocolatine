@@ -1,6 +1,6 @@
 {
   "name": "LibreChat",
-  "version": "0.6.10",
+  "version": "0.7.1",
   "description": "",
   "workspaces": [
     "api",
@@ -99,5 +99,10 @@
       "admin/",
       "packages/"
     ]
+  },
+  "dependencies": {
+    "chart.js": "^4.4.2",
+    "librechat-data-provider": "^0.5.5",
+    "react-chartjs-2": "^5.2.0"
   }
 }

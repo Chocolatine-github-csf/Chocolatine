@@ -11,6 +11,7 @@ export const PresetTeacherContext = createContext<PresetTeacherContextType | und
 
 export const PresetTeacherProvider : FC<{children: React.ReactNode}> = ({ children }) => {
   const isTeacher = useTeacherData().isTeacher;
+
   const [selectedPreset, setSelectedPreset] = useState<TPreset | undefined>();
 
   if(!isTeacher){

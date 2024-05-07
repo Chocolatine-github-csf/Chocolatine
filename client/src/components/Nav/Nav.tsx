@@ -20,6 +20,7 @@ import NavLinks from './NavLinks';
 import NewChat from './NewChat';
 import { cn } from '~/utils';
 import store from '~/store';
+import { UserComment } from './UserComment';
 
 const Nav = ({ navVisible, setNavVisible }) => {
   const { conversationId } = useParams();
@@ -156,6 +157,7 @@ const Nav = ({ navVisible, setNavVisible }) => {
                       onMouseLeave={handleMouseLeave}
                       ref={containerRef}
                     >
+                      <UserComment />
                       <NewChat
                         toggleNav={itemToggleNav}
                         subHeaders={isSearchEnabled && <SearchBar clearSearch={clearSearch} />}

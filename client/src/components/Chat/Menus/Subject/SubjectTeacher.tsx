@@ -12,7 +12,6 @@ const SubjectTeacher: FC = () =>{
   }
   const { selectedPreset } = context;
   const title = selectedPreset?.title;
-  console.log('title', title);
 
   return (
     <div

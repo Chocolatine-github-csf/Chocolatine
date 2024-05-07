@@ -1,9 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { EModelEndpoint } from 'librechat-data-provider';
 import type { TConversation, TMessage } from 'librechat-data-provider';
-import { Clipboard, CheckMark, EditIcon, RegenerateIcon, ContinueIcon } from '~/components/svg';
-import { useGenerationsByLatest, useLocalize } from '~/hooks';
+import { Clipboard, CheckMark, EditIcon, RegenerateIcon, ContinueIcon, FeedBackGoodIcon, FeedBackBadIcon } from '~/components/svg';
+import { useGenerationsByLatest, useLocalize, useUserRole } from '~/hooks';
 import { cn } from '~/utils';
+import { useTeacherData } from '~/hooks/useTeacherData';
+import { useGetPresetsQuery } from '~/data-provider';
+import { PresetTeacherContext } from '~/Providers';
+import { usePostFeedback } from 'librechat-data-provider/dist/types/react-query';
+import { TFeedBack } from 'librechat-data-provider/dist/types';
+import { useFeedBack } from '~/hooks';
 
 type THoverButtons = {
   isEditing: boolean;
@@ -45,13 +51,31 @@ export default function HoverButtons({
     return null;
   }
 
-  const { isCreatedByUser } = message;
+  const { isCreatedByUser} = message;
 
   const onEdit = () => {
     if (isEditing) {
       return enterEdit(true);
     }
     enterEdit();
+  };
+
+  const isTeacher = useTeacherData();
+  const [ feedback, setFeedback ] = useState({messageId: "", message: "", feedback: false});
+  const { postFeedback } = useFeedBack(feedback);
+
+  const sendFeedback = (messageId: string, message: TMessage, feedback: boolean) => {
+    const feedbackParams: TFeedBack = {messageId: messageId, message: message.text, feedback: feedback};
+    setFeedback(feedbackParams);
+    console.log(feedback);
+    try{
+      console.log("Sending feedback");
+      console.log(feedbackParams);
+      postFeedback(feedbackParams);
+    }
+    catch(e){
+      console.log(e);
+    }
   };
 
   return (
@@ -73,6 +97,7 @@ export default function HoverButtons({
           <EditIcon />
         </button>
       )}
+      
       <button
         className={cn(
           'ml-0 flex items-center gap-1.5 rounded-md p-1 text-xs hover:text-gray-900 dark:text-gray-400/70 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:group-hover:visible md:group-[.final-completion]:visible',
@@ -112,6 +137,26 @@ export default function HoverButtons({
         >
           <ContinueIcon className="h-4 w-4 hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400" />
         </button>
+      ) : null}
+      {isTeacher && !isCreatedByUser ? (
+        <div>
+          <button
+            className="hover-button active rounded-md p-1 hover:bg-gray-200 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"
+            onClick={() => {sendFeedback(message.messageId, message, true)}}
+          >
+            Good<FeedBackGoodIcon className="hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400" />
+          </button>
+        </div>
+      ) : null}
+      {isTeacher && !isCreatedByUser ? (
+        <div>
+          <button
+            className="hover-button active rounded-md p-1 hover:bg-gray-200 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"
+            onClick={() => {sendFeedback(message.messageId, message, false)}}
+          >
+            Bad<FeedBackBadIcon className="hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400" />
+          </button>
+        </div>
       ) : null}
     </div>
   );
