@@ -8,7 +8,7 @@ const SubjectTeacher: FC = () =>{
 
   if(!context)
   {
-    throw new Error('usePresetTeacher must be used within a PresetTeacherProvider');
+    throw new Error('usePresetTeacher must be used within a PresetTeacherProvider (*SubjectTeacher*)');
   }
   const { selectedPreset } = context;
   const title = selectedPreset?.title;
