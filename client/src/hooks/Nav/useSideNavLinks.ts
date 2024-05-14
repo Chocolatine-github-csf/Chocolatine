@@ -4,7 +4,7 @@ import {
   // Settings2,
 } from 'lucide-react';
 import { EModelEndpoint } from 'librechat-data-provider';
-import type { TConfig } from 'librechat-data-provider';
+import type { TConfig, TInterfaceConfig } from 'librechat-data-provider';
 import type { NavLink } from '~/common';
 import PanelSwitch from '~/components/SidePanel/Builder/PanelSwitch';
 // import Parameters from '~/components/SidePanel/Parameters/Panel';
@@ -16,13 +16,13 @@ export default function useSideNavLinks({
   assistants,
   keyProvided,
   endpoint,
-  role,
+  interfaceConfig,
 }: {
   hidePanel: () => void;
   assistants?: TConfig | null;
   keyProvided: boolean;
   endpoint?: EModelEndpoint | null;
-  role: string | null;
+  interfaceConfig: Partial<TInterfaceConfig>;
 }) {
   const Links = useMemo(() => {
     const links: NavLink[] = [];
@@ -40,7 +40,8 @@ export default function useSideNavLinks({
       endpoint === EModelEndpoint.assistants &&
       assistants &&
       assistants.disableBuilder !== true &&
-      keyProvided && role === 'ADMIN'
+      keyProvided &&
+      interfaceConfig.parameters
     ) {
       links.push({
         title: 'com_sidepanel_assistant_builder',
@@ -68,7 +69,7 @@ export default function useSideNavLinks({
     });
 
     return links;
-  }, [assistants, keyProvided, hidePanel, endpoint, role]);
+  }, [assistants, keyProvided, hidePanel, endpoint, interfaceConfig.parameters]);
 
   return Links;
 }

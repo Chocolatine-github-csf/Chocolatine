@@ -1,8 +1,9 @@
 import { useContext, useState } from 'react';
 import { EModelEndpoint } from 'librechat-data-provider';
 import type { TConversation, TMessage } from 'librechat-data-provider';
-import { Clipboard, CheckMark, EditIcon, RegenerateIcon, ContinueIcon, FeedBackGoodIcon, FeedBackBadIcon } from '~/components/svg';
-import { useGenerationsByLatest, useLocalize, useUserRole } from '~/hooks';
+import { Clipboard, CheckMark, EditIcon, RegenerateIcon, ContinueIcon } from '~/components/svg';
+import { useGenerationsByLatest, useLocalize } from '~/hooks';
+import { Fork } from '~/components/Conversations';
 import { cn } from '~/utils';
 import { useTeacherData } from '~/hooks/useTeacherData';
 import { useGetPresetsQuery } from '~/data-provider';
@@ -40,13 +41,14 @@ export default function HoverButtons({
   const { endpoint: _endpoint, endpointType } = conversation ?? {};
   const endpoint = endpointType ?? _endpoint;
   const [isCopied, setIsCopied] = useState(false);
-  const { hideEditButton, regenerateEnabled, continueSupported } = useGenerationsByLatest({
-    isEditing,
-    isSubmitting,
-    message,
-    endpoint: endpoint ?? '',
-    latestMessage,
-  });
+  const { hideEditButton, regenerateEnabled, continueSupported, forkingSupported } =
+    useGenerationsByLatest({
+      isEditing,
+      isSubmitting,
+      message,
+      endpoint: endpoint ?? '',
+      latestMessage,
+    });
   if (!conversation) {
     return null;
   }
@@ -125,6 +127,13 @@ export default function HoverButtons({
           <RegenerateIcon className="hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400" />
         </button>
       ) : null}
+      <Fork
+        isLast={isLast}
+        messageId={message.messageId}
+        conversationId={conversation.conversationId}
+        forkingSupported={forkingSupported}
+        latestMessage={latestMessage}
+      />
       {continueSupported ? (
         <button
           className={cn(

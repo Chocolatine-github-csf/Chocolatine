@@ -19,6 +19,7 @@ const validateRegistration = require('./validateRegistration');
 const validateImageRequest = require('./validateImageRequest');
 const moderateText = require('./moderateText');
 const noIndex = require('./noIndex');
+const importLimiters = require('./importLimiters');
 
 module.exports = {
   ...uploadLimiters,
@@ -40,6 +41,7 @@ module.exports = {
   validateModel,
   moderateText,
   noIndex,
+  ...importLimiters,
   checkDomainAllowed,
   checkUserNameAllowed,
 };

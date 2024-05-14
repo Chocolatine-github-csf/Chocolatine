@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
-const { registerSchema, errorsToString } = require('~/strategies/validators');
+const { errorsToString } = require('librechat-data-provider');
+const { registerSchema } = require('~/strategies/validators');
 const isDomainAllowed = require('./isDomainAllowed');
 const isUserNameAllowed = require('./isUserNameAllowed');
 const Token = require('~/models/schema/tokenSchema');
