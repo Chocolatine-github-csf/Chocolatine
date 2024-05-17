@@ -1,3 +1,4 @@
+export { default as ArchiveIcon } from './ArchiveIcon';
 export { default as Blocks } from './Blocks';
 export { default as Plugin } from './Plugin';
 export { default as GPTIcon } from './GPTIcon';
@@ -48,5 +49,3 @@ export { default as GoogleIconChat } from './GoogleIconChat';
 export { default as BirthdayIcon } from './BirthdayIcon';
 export { default as AssistantIcon } from './AssistantIcon';
 export { default as Sparkles } from './Sparkles';
-export { default as FeedBackBadIcon } from './FeedBackBadIcon';
-export { default as FeedBackGoodIcon } from './FeedBackGoodIcon';

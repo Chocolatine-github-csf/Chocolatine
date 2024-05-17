@@ -11,9 +11,9 @@ import {
   useDeletePresetMutation,
   useGetPresetsQuery,
 } from '~/data-provider';
+import { cleanupPreset, getEndpointField, removeUnavailableTools } from '~/utils';
+import useDefaultConvo from '~/hooks/Conversations/useDefaultConvo';
 import { useChatContext, useToastContext } from '~/Providers';
-import { cleanupPreset, getEndpointField } from '~/utils';
-import useDefaultConvo from '~/hooks/useDefaultConvo';
 import { useAuthContext } from '~/hooks/AuthContext';
 import { NotificationSeverity } from '~/common';
 import useLocalize from '~/hooks/useLocalize';
@@ -32,6 +32,7 @@ export default function usePresets() {
   const { user, isAuthenticated } = useAuthContext();
 
   const modularChat = useRecoilValue(store.modularChat);
+  const availableTools = useRecoilValue(store.availableTools);
   const setPresetModalVisible = useSetRecoilState(store.presetModalVisible);
   const [_defaultPreset, setDefaultPreset] = useRecoilState(store.defaultPreset);
   const presetsQuery = useGetPresetsQuery({ enabled: !!user && isAuthenticated });
@@ -41,11 +42,11 @@ export default function usePresets() {
 
   //FOR TEACHER
   const isTeacher = useTeacherData().isTeacher;
-  const presetTeacherContext = useContext(PresetTeacherContext);
-  if (!presetTeacherContext) {
-    throw new Error('usePresets must be used within a PresetTeacherContext.Provider (*usePresets*)');
-  }
-  const { setSelectedPreset } = presetTeacherContext;
+  // const presetTeacherContext = useContext(PresetTeacherContext);
+  // if (!presetTeacherContext) {
+  //   throw new Error('usePresets must be used within a PresetTeacherContext.Provider (*usePresets*)');
+  // }
+  // const { setSelectedPreset } = presetTeacherContext;
   // const isTeacher = useTeacherData().isTeacher;
   // const presetTeacherContext = useContext(PresetTeacherContext);
   // if (!presetTeacherContext) {
@@ -174,14 +175,16 @@ export default function usePresets() {
     importPreset(jsonPreset);
   };
 
-  const onSelectPreset = (newPreset: TPreset) => {
-    if (!newPreset) {
+  const onSelectPreset = (_newPreset: TPreset) => {
+    if (!_newPreset) {
       return;
     }
+
+    const newPreset = removeUnavailableTools(_newPreset, availableTools);
     // FOR TEACHER
-    if(isTeacher){
-      setSelectedPreset(newPreset);
-    }
+    // if(isTeacher){
+    //   setSelectedPreset(newPreset);
+    // }
 
     const toastTitle = newPreset.title
       ? `"${newPreset.title}"`
