@@ -100,5 +100,11 @@
       "admin/",
       "packages/"
     ]
+  },
+  "dependencies": {
+    "chart.js": "^4.4.2",
+    "librechat-data-provider": "^0.5.5",
+    "ollama": "^0.5.1",
+    "react-chartjs-2": "^5.2.0"
   }
 }
