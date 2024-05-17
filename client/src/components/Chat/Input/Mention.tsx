@@ -40,9 +40,9 @@ export default function Mention({
       setShowMentionPopover(false);
       onSelectMention(mention);
 
-      if (textAreaRef.current) {
-        removeAtSymbolIfLast(textAreaRef.current);
-      }
+      // if (textAreaRef.current) {
+      //   removeAtSymbolIfLast(textAreaRef.current);
+      // }
     };
 
     if (mention.type === 'endpoint' && mention.value === EModelEndpoint.assistants) {

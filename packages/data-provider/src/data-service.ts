@@ -7,10 +7,6 @@ import * as s from './schemas';
 import request from './request';
 import * as endpoints from './api-endpoints';
 
-export function getConversations(pageNumber: string): Promise<t.TGetConversationsResponse> {
-  return request.get(endpoints.conversations(pageNumber));
-}
-
 export function abortRequestWithMessage(
   endpoint: string,
   abortKey: string,
@@ -86,15 +82,6 @@ export function deleteSkill(skill: t.TSkill): Promise<unknown> {
   return request.delete(endpoints.deleteSkill(skill.subject, skill.skill));
 }
 
-export function deleteConversation(payload: t.TDeleteConversationRequest) {
-  //todo: this should be a DELETE request
-  return request.post(endpoints.deleteConversation(), { arg: payload });
-}
-
-export function clearAllConversations(): Promise<unknown> {
-  return request.post(endpoints.deleteConversation(), { arg: {} });
-}
-
 export function revokeUserKey(name: string): Promise<unknown> {
   return request.delete(endpoints.revokeUserKey(name));
 }
@@ -108,20 +95,6 @@ export function getMessagesByConvoId(conversationId: string): Promise<s.TMessage
     return Promise.resolve([]);
   }
   return request.get(endpoints.messages(conversationId));
-}
-
-export function getConversationById(id: string): Promise<s.TConversation> {
-  return request.get(endpoints.conversationById(id));
-}
-
-export function updateConversation(
-  payload: t.TUpdateConversationRequest,
-): Promise<t.TUpdateConversationResponse> {
-  return request.post(endpoints.updateConversation(), { arg: payload });
-}
-
-export function genTitle(payload: m.TGenTitleRequest): Promise<m.TGenTitleResponse> {
-  return request.post(endpoints.genTitle(), payload);
 }
 
 export function updateMessage(payload: t.TUpdateMessageRequest): Promise<unknown> {
@@ -169,13 +142,6 @@ export function getUser(): Promise<t.TUser> {
 export function getUserBalance(): Promise<string> {
   return request.get(endpoints.balance());
 }
-
-export const searchConversations = async (
-  q: string,
-  pageNumber: string,
-): Promise<t.TSearchResults> => {
-  return request.get(endpoints.search(q, pageNumber));
-};
 
 export const updateTokenCount = (text: string) => {
   return request.post(endpoints.tokenizer(), { arg: text });
@@ -358,6 +324,14 @@ export function forkConversation(payload: t.TForkConvoRequest): Promise<t.TForkC
   return request.post(endpoints.forkConversation(), payload);
 }
 
+export function deleteConversation(payload: t.TDeleteConversationRequest) {
+  //todo: this should be a DELETE request
+  return request.post(endpoints.deleteConversation(), { arg: payload });
+}
+
+export function clearAllConversations(): Promise<unknown> {
+  return request.post(endpoints.deleteConversation(), { arg: {} });
+}
 
 export const listConversations = (
   params?: q.ConversationListParams,
@@ -381,9 +355,26 @@ export const listConversationsByQuery = (
   }
 };
 
+export const searchConversations = async (
+  q: string,
+  pageNumber: string,
+): Promise<t.TSearchResults> => {
+  return request.get(endpoints.search(q, pageNumber));
+};
 
+export function getConversations(pageNumber: string): Promise<t.TGetConversationsResponse> {
+  return request.get(endpoints.conversations(pageNumber));
+}
 
+export function getConversationById(id: string): Promise<s.TConversation> {
+  return request.get(endpoints.conversationById(id));
+}
 
+export function updateConversation(
+  payload: t.TUpdateConversationRequest,
+): Promise<t.TUpdateConversationResponse> {
+  return request.post(endpoints.updateConversation(), { arg: payload });
+}
 
 export function archiveConversation(
   payload: t.TArchiveConversationRequest,
@@ -391,3 +382,6 @@ export function archiveConversation(
   return request.post(endpoints.updateConversation(), { arg: payload });
 }
 
+export function genTitle(payload: m.TGenTitleRequest): Promise<m.TGenTitleResponse> {
+  return request.post(endpoints.genTitle(), payload);
+}
