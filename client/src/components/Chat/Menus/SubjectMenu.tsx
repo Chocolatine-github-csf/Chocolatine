@@ -3,10 +3,10 @@ import { FC } from 'react';
 import { useTeacherData } from '~/hooks/useTeacherData';
 
 const SubjectMenu: FC = () => {
-  const isTeacher = useTeacherData().isTeacher;
+  // const isTeacher = useTeacherData().isTeacher;
   return (
     <>
-      {isTeacher && <SubjectTeacher />}
+      {/* {isTeacher && <SubjectTeacher />} */}
     </>
   );
 };

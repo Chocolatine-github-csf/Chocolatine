@@ -358,14 +358,6 @@ export function forkConversation(payload: t.TForkConvoRequest): Promise<t.TForkC
   return request.post(endpoints.forkConversation(), payload);
 }
 
-export function deleteConversation(payload: t.TDeleteConversationRequest) {
-  //todo: this should be a DELETE request
-  return request.post(endpoints.deleteConversation(), { arg: payload });
-}
-
-export function clearAllConversations(): Promise<unknown> {
-  return request.post(endpoints.deleteConversation(), { arg: {} });
-}
 
 export const listConversations = (
   params?: q.ConversationListParams,
@@ -389,26 +381,9 @@ export const listConversationsByQuery = (
   }
 };
 
-export const searchConversations = async (
-  q: string,
-  pageNumber: string,
-): Promise<t.TSearchResults> => {
-  return request.get(endpoints.search(q, pageNumber));
-};
 
-export function getConversations(pageNumber: string): Promise<t.TGetConversationsResponse> {
-  return request.get(endpoints.conversations(pageNumber));
-}
 
-export function getConversationById(id: string): Promise<s.TConversation> {
-  return request.get(endpoints.conversationById(id));
-}
 
-export function updateConversation(
-  payload: t.TUpdateConversationRequest,
-): Promise<t.TUpdateConversationResponse> {
-  return request.post(endpoints.updateConversation(), { arg: payload });
-}
 
 export function archiveConversation(
   payload: t.TArchiveConversationRequest,
@@ -416,6 +391,3 @@ export function archiveConversation(
   return request.post(endpoints.updateConversation(), { arg: payload });
 }
 
-export function genTitle(payload: m.TGenTitleRequest): Promise<m.TGenTitleResponse> {
-  return request.post(endpoints.genTitle(), payload);
-}

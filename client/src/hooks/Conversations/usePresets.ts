@@ -42,11 +42,11 @@ export default function usePresets() {
 
   //FOR TEACHER
   const isTeacher = useTeacherData().isTeacher;
-  const presetTeacherContext = useContext(PresetTeacherContext);
-  if (!presetTeacherContext) {
-    throw new Error('usePresets must be used within a PresetTeacherContext.Provider (*usePresets*)');
-  }
-  const { setSelectedPreset } = presetTeacherContext;
+  // const presetTeacherContext = useContext(PresetTeacherContext);
+  // if (!presetTeacherContext) {
+  //   throw new Error('usePresets must be used within a PresetTeacherContext.Provider (*usePresets*)');
+  // }
+  // const { setSelectedPreset } = presetTeacherContext;
   // const isTeacher = useTeacherData().isTeacher;
   // const presetTeacherContext = useContext(PresetTeacherContext);
   // if (!presetTeacherContext) {
@@ -182,9 +182,9 @@ export default function usePresets() {
 
     const newPreset = removeUnavailableTools(_newPreset, availableTools);
     // FOR TEACHER
-    if(isTeacher){
-      setSelectedPreset(newPreset);
-    }
+    // if(isTeacher){
+    //   setSelectedPreset(newPreset);
+    // }
 
     const toastTitle = newPreset.title
       ? `"${newPreset.title}"`

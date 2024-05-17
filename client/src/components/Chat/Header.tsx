@@ -33,8 +33,7 @@ export default function Header() {
           {modelSpecs?.length > 0 && <ModelSpecsMenu modelSpecs={modelSpecs} />}
           <HeaderOptions interfaceConfig={interfaceConfig} />
           {interfaceConfig.presets && <PresetsMenu />}
-
-        <ExportButton />
+          <ExportButton />
             <SubjectMenu /> 
             <AdminMenu />
           </>

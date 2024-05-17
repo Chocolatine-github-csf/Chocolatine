@@ -35,7 +35,7 @@ export default function useSideNavLinks({
     //     Component: Parameters,
     //   });
     // }
-    console.log('ROLE UTILISATEUR:', role);
+    // console.log('ROLE UTILISATEUR:', role);
     if (
       endpoint === EModelEndpoint.assistants &&
       assistants &&
