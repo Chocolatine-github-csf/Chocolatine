@@ -5,7 +5,7 @@ import type { MentionOption } from '~/common';
 import { useAssistantsMapContext } from '~/Providers';
 import useMentions from '~/hooks/Input/useMentions';
 import { useLocalize, useCombobox } from '~/hooks';
-import { removeAtSymbolIfLast } from '~/utils';
+// import { removeAtSymbolIfLast } from '~/utils';
 import MentionItem from './MentionItem';
 
 export default function Mention({

@@ -11,6 +11,8 @@ import { PresetTeacherContext } from '~/Providers';
 import { usePostFeedback } from 'librechat-data-provider/dist/types/react-query';
 import { TFeedBack } from 'librechat-data-provider/dist/types';
 import { useFeedBack } from '~/hooks';
+import FeedBackGoodIcon from '~/components/svg/FeedBackGoodIcon';
+import FeedBackBadIcon from '~/components/svg/FeedBackBadIcon';
 
 type THoverButtons = {
   isEditing: boolean;
