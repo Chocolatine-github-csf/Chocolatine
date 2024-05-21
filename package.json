@@ -1,6 +1,6 @@
 {
   "name": "LibreChat",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "",
   "workspaces": [
     "api",
@@ -11,6 +11,7 @@
     "update": "node config/update.js",
     "add-balance": "node config/add-balance.js",
     "list-balances": "node config/list-balances.js",
+    "user-stats": "node config/user-stats.js",
     "rebuild:package-lock": "node config/packages",
     "reinstall": "node config/update.js -l -g",
     "b:reinstall": "bun config/update.js -b -l -g",
@@ -103,6 +104,7 @@
   "dependencies": {
     "chart.js": "^4.4.2",
     "librechat-data-provider": "^0.5.5",
+    "ollama": "^0.5.1",
     "react-chartjs-2": "^5.2.0"
   }
 }
