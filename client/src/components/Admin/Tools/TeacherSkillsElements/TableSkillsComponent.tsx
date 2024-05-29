@@ -13,15 +13,14 @@ const TableSkillsComponent = ({ subject, skills }) => (
         </TableRow>
       </TableHeader>
       <TableBody>
-        {skills
-          ?
+        {
           (skills as TSkill[]).map((skill: TSkill, index: number) => (
             <TableRow key={index}>
               <TableCell className='p-2 border'><Label>{skill.skill}</Label></TableCell>
               <TableCell className='p-2 border'><Label>{skill.count}</Label></TableCell>
             </TableRow>
           ))
-          :
+          ??
           <TableRow><TableCell>No skills</TableCell></TableRow>
         }
       </TableBody>

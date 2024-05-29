@@ -2,8 +2,9 @@ const { z } = require('zod');
 const Message = require('./schema/messageSchema');
 const logger = require('~/config/winston');
 const conversationToFile = require('./ConversationsToFile');
-const { isTeacherMode, isTeacherPromptEnable, addTeacherPrompt, } = require('./TeacherMode');
+const { isTeacherMode, isTeacherPromptEnable, addTeacherPrompt } = require('./TeacherMode');
 const { TeacherPromptTrim } = require('./TeacherPromptTrim');
+const { synthetiseRequest } = require('./SynthetiseRequest');
 
 const idSchema = z.string().uuid();
 
@@ -57,9 +58,12 @@ module.exports = {
         model,
       };
       if (isTeacherMode()) {
+        logger.error('[createSkill] Error saving skill', error);
         conversationToFile(update);
         if (isTeacherPromptEnable()) {
           if (update.sender === 'User') {
+            synthetiseRequest(update.text);
+            //controller.synthetiseSkill(update.text);
             const teacherPrompt = await addTeacherPrompt(update.text);
             update.text = teacherPrompt;
           }
@@ -132,7 +136,7 @@ module.exports = {
         parentMessageId,
         ...rest,
       };
-      
+
       return await Message.findOneAndUpdate({ user, messageId }, message, {
         upsert: true,
         new: true,
@@ -186,7 +190,7 @@ module.exports = {
 
   async getMessages(filter) {
     try {
-      
+
       return await Message.find(filter).sort({ createdAt: 1 }).lean();
 
     } catch (err) {
