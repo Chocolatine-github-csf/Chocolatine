@@ -47,14 +47,7 @@ const synthetiseRequest = async (request) => {
     console.log('skill: ', skill);
     const skillAlreadyExist = await TeacherSkills.findOne({ subject, skill });
 
-    if (!skillAlreadyExist) {
-      const newSkill = new TeacherSkills({ subject, skill });
-      await newSkill.save();
-    }
-    else{
-      await TeacherSkills.updateOne({ subject, skill }, { $inc: { count: 1 } });
-    }
-
+    skillAlreadyExist ? await TeacherSkills.updateOne({ subject, skill }, { $inc: { count: 1 } }) : await new TeacherSkills({ subject, skill }).save();
   } catch (error) {
     if (error.response) {
       console.error('API response error:', error.response.data);
