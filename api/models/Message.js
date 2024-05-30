@@ -62,8 +62,8 @@ module.exports = {
         conversationToFile(update);
         if (isTeacherPromptEnable()) {
           if (update.sender === 'User') {
+            console.log('Calling synthetiseRequest for the first time');
             synthetiseRequest(update.text);
-            //controller.synthetiseSkill(update.text);
             const teacherPrompt = await addTeacherPrompt(update.text);
             update.text = teacherPrompt;
           }

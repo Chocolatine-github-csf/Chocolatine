@@ -1,10 +1,56 @@
 const axios = require('axios');
 const TeacherSkills = require('./TeacherSkills.js');
-const List = 'inclassable, tableau, algorithme, classe, fonction, boucle, recherche, dichotomique, insertion, selection, bulle, asynchrone, synchrone, api, binaire';
-const ClassList = 'intro-prog, objet, bases de donnees, web, maths, reseau, cybersecurite, IoT';
 
-const oneWordRequest = async (request, list) => {
-  const prompt = `Choisissez exactement un mot de la liste suivante pour synthetiser la requete : ${list}. Voici la question : ${request}. Ta reponse ne doit contenir que le mot de la liste que tu as selectionne et lui seul.`;
+const twoWordsRequest = async (request) => {
+  const prompt = `Tu recevras une requête d'un étudiant. Ta tâche est d'analyser cette requête et de la synthétiser en un mot pour le sujet (subject) et en un mot pour la compétence (skill). Utilise les listes suivantes pour sélectionner les mots appropriés.
+
+  Liste des sujets (subject) :
+  - divers
+  - intro-prog
+  - prog-orientee-objet
+  - bases-de-donnees
+  - web
+  - maths
+  - reseau
+  - cybersecurite
+  - IoT
+  
+  Liste des compétences (skill) :
+  - inclassable
+  - tableau
+  - algorithme
+  - classe
+  - fonction
+  - boucle
+  - asynchrone
+  - synchrone
+  - api
+  - binaire
+  - Templates
+  - Bibliotheques
+  
+  Format de réponse :
+  json
+  {
+    "subject": "...",
+    "skill": "..."
+  }
+  
+  Voici un exemple de requête d'un étudiant pour t'aider :
+  "L'étudiant demande de l'aide pour un tableau et comprendre les concepts de boucles."
+  
+  Réponse attendue :
+  json
+  {
+    "subject": "intro-prog",
+    "skill": "tableau"
+  }
+  
+  Maintenant, analyse la requête suivante et fournis une réponse au format JSON :
+  
+  Requête de l'étudiant : ${request}
+  `;
+
   let instanceName = 'h24-420-w57-sf-12005-openai-eastus';
   let deployment = 'gpt-35-turbo-eastus';
   let apiVersion = '2024-02-15-preview';
@@ -15,7 +61,7 @@ const oneWordRequest = async (request, list) => {
       messages: [
         { role: 'user', content: prompt },
       ],
-      max_tokens: 10,
+      max_tokens: 100,
       temperature: 1,
     },
     {
@@ -23,10 +69,11 @@ const oneWordRequest = async (request, list) => {
         'Content-Type': 'application/json',
       },
     });
-    const aiResponse =  response.data.choices[0].message.content;
-    const oneWord = aiResponse.trim();
-    console.log('subject: ', oneWord);
-    return oneWord;
+    const aiResponse =  response.data.choices[0].message.content.trim();
+    const { subject, skill } = JSON.parse(aiResponse);
+    console.log('reponse: ', aiResponse);
+
+    return { subject , skill };
   } catch (error) {
     if (error.response) {
       console.error('API response error:', error.response.data);
@@ -41,13 +88,14 @@ const oneWordRequest = async (request, list) => {
 
 const synthetiseRequest = async (request) => {
   try{
-    const subject = await oneWordRequest(request, ClassList);
-    const skill = await oneWordRequest(request, List);
-    console.log('subject: ', subject);
-    console.log('skill: ', skill);
+    const { subject, skill } = await twoWordsRequest(request);
     const skillAlreadyExist = await TeacherSkills.findOne({ subject, skill });
 
-    skillAlreadyExist ? await TeacherSkills.updateOne({ subject, skill }, { $inc: { count: 1 } }) : await new TeacherSkills({ subject, skill }).save();
+    skillAlreadyExist ?
+      await TeacherSkills.updateOne({ subject, skill }, { $inc: { count: 1 } })
+      :
+      await new TeacherSkills({ subject, skill }).save();
+
   } catch (error) {
     if (error.response) {
       console.error('API response error:', error.response.data);
