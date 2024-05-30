@@ -8,8 +8,8 @@ interface PieComponentProps {
 }
 
 const PieComponent: React.FC<PieComponentProps> = ({ subject, skills }) => {
-  const sliceNames = skills.map(skill => skill.skill);
-  const slicesCount = skills.map(skill => skill.count);
+  const sliceNames = skills.map(skill => skill.skill) ?? [];
+  const slicesCount = skills.map(skill => skill.count) ?? [];
 
   const backgroundColors = [
     '#FF6384',

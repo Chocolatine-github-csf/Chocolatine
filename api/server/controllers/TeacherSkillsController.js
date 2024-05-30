@@ -78,14 +78,22 @@ const teacherSkillsController = {
   },
 
   incrementSkill: async (req, res) => {
-    const { subject, skill } = req.params;
+    const { subject, skill } = req.params || {};
+    if (!subject || !skill) {
+      throw new Error('Subject or skill is undefined');
+    }
     try {
+      if (!subject || !skill) {
+        throw new Error('Subject or skill is undefined');
+      }
       const skillToUpdate = await TeacherSkills.findOne({ subject, skill });
       if (!skillToUpdate) {
-        return res.status(200).json({ message: 'No skills found' });
+        res.status(200).json({ message: 'No skills found' });
       }
-      await TeacherSkills.updateOne({ subject, skill }, { $inc: { count: 1 } });
-      res.status(201).json({ message: 'Skill incremented successfully' });
+      const skillUpdated = await TeacherSkills.updateOne({ subject, skill }, { $inc: { count: 1 } });
+      if(skillUpdated){
+        res.status(201).json({ message: 'Skill incremented successfully' });
+      }
     } catch (error) {
       logger.error('[incrementSkill] Error incrementing skill', error);
       res.status(500).json({ message: 'Error incrementing skill' });

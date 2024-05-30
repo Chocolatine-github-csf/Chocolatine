@@ -42,13 +42,15 @@ function TeacherSkills() {
     setSubject('');
     setSkillName('');
   };
-  const skillsBySubject = teacherSkillsListAll?.reduce((acc, skill) => {
+
+  const skillsBySubject = Array.isArray(teacherSkillsListAll) ? teacherSkillsListAll.reduce((acc, skill) => {
+    console.log(teacherSkillsListAll, Array.isArray(teacherSkillsListAll));
     if (!acc[skill.subject]) {
       acc[skill.subject] = [];
     }
     acc[skill.subject].push(skill);
     return acc;
-  }, {});
+  }, {}) : {};
 
   const subjects = [...new Set(teacherSkillsListAll?.map(skill => skill.subject))];
 
